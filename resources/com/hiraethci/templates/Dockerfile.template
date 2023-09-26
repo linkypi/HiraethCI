@@ -1,0 +1,10 @@
+FROM ${baseImage}
+
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+RUN echo 'Asia/Shanghai' >/etc/timezone
+
+<% commands.each { %>
+${it}
+<% } %>
+
+${ entryPoint != null && entryPoint != "" ? ("ENTRYPOINT [" + entryPoint +"]"): ""}

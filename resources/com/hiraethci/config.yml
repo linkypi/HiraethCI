@@ -1,0 +1,118 @@
+
+gitCredential:
+   id: 'gitlab-ssh'
+   userName: 'service_account'
+   userEmail: 'trouble.linky@gmail.com'
+
+# 默认镜像
+defaultImage:
+  frontend: "nginx"
+  backend: "openjdk:8-jdk-slim"
+
+defaultJarName: "app.jar"
+
+defaultFrontendConfig:
+  env: ''
+  baseUrl: ''
+  websocket: ''
+
+defaultH5Config:
+  defaultEnv: presit
+
+# 默认JVM参数，默认仅设置内存大小，如需自定义可设置 JVM_OPTS 参数
+# flag 指定参数名称，由于不同参数前面使用不同的横杠，所以该啊承诺书需带上前面的横杠，可能是一个可能是两个
+# connector：连接符，如参数 Xms 没有连接符，而 -XX:HeapDumpPath 的连接符为 =
+# value: 指定参数对应的值
+defaultJavaOpts:
+  - flag: '-Xms'
+    value: '512m'
+  - flag: '-Xmx'
+    value: '512m'
+  - flag: '-XX:+HeapDumpOnOutOfMemoryError'
+  - flag: '-XX:HeapDumpPath'
+    connector: '='
+    value: '/java_heapdump.hprof'
+# 默认代理
+defaultAgent: "master"
+# 默认部署机器, 对应 IP 放在 deployHostIpMapper
+defaultDeployHost: "presit"
+# 用于设置 spring.config.location=xxx, 即jar包通过外部配置来启动，而非jar包内部的配置文件
+# 注意路径后面必须带 / 否则报错！！！ classpath:/config/,/resources/
+springConfigAdditionalLocation: "/config/"
+
+nginx:
+  # 自定义不同前端项目的实际访问路径
+  location: '/'
+
+# 后端默认代理路径
+nginxDefaultProxyLocation: '/api'
+
+# 默认容器内部 log 存储路径
+defaultContainerLogPath:
+  frontend: "/etc/nginx/logs"
+  backend: "/logs"
+
+dockerDebugArgs: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address="
+defaultDockerRemoteDebugPort: 5005
+
+# 是否开启远程调试， 默认不开启
+enableRemoteDebug: false
+
+nexus:
+  # 注意 nexusUrl 不能带 "http://" 否则 docker tag 命令会报错
+  url: "192.168.10.80:8090/docker-release"
+  userName: "admin"
+  password: "password"
+
+# 代理机器名称与IP对应关系
+agentIpMapper:
+  master : "192.168.10.50"
+  sit : "192.168.10.51"
+  uat : "192.168.10.52"
+
+# 部署机器名称与IP对应关系
+deployHostIpMapper:
+  presit : "192.168.10.50"
+  sit : "192.168.10.52"
+  uat : "192.168.10.53"
+  prod : "192.168.10.54"
+
+# 使用SonarQube 扫描代码 执行Code Review
+reviewCode: true
+
+# keepalived 虚拟冗余路由IP, 若构建机器安装有 keepalived 则需要在此指定冗余IP，否则部署会找不到指定主机
+VRRPIP:
+  - "192.168.10.100"
+  - "192.168.10.110"
+  - "192.168.10.120"
+
+imageUrl: "192.168.10.50/release/%s:%s"
+# 指定 k8s 资源文件所在仓库
+k8sDeployment:
+  relativeSubDir: 'deploy' # k8s 资源文件在源码的相对位置
+  url: 'git@192.168.10.56:/k8s-deployment.git'
+  branch: 'master'
+
+# gitlab 项目与  k8s deployment 各文件夹的对应关系
+projectMappers:
+  web-backend: web-backend
+  web-frontend: web-frontend
+
+  cms-frontend: cms-frontend
+  cms-backend: cms-backend
+
+  app-backend: h5-backend
+  h5-frontend: h5-frontend
+
+  api-auth: api-auth
+  api-document: api-document
+
+
+dingding:
+  robotId: "xxxxxxx"  # 需自行开通钉钉获取实际id
+  maxChangeRecords: 30
+
+argocd:
+  server: 192.168.10.80:9081  # 注意移除 http://
+  username: admin
+  password: "password"

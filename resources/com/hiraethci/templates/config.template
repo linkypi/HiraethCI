@@ -1,0 +1,5 @@
+var CUSTOM_CONFIG = {
+    <% props.each { %>
+    ${it}
+    <% } %>
+}

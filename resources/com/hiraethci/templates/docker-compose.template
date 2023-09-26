@@ -1,0 +1,29 @@
+version: '3.5'
+services:
+  ${serviceName}:
+    image: ${imageName}
+    container_name: ${container}-${version}
+    hostname: ${hostname}
+    ports:
+        <% ports.each { %>
+        - ${it}
+        <% } %>
+    restart: ${restart}
+    networks:
+      - ${network}
+    volumes:
+      - ${logPathPrefix}/${container}/logs:${containerLogPath}
+      <% volumes.each { %>
+      - ${it}
+      <% } %>
+
+    ${ hasEnvs ? "environment:" : ""}
+      <% environments.each { %>
+      - ${it}
+      <% } %>
+    
+    ${command}
+
+networks:
+  ${network}:
+    external: true
